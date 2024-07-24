@@ -1,0 +1,18 @@
+#chessboard {
+  width: 90vh;
+  height: 90vh;
+  max-height: 90vw;
+  max-width:90vw;
+  background-color: #B58863;
+  display: grid;
+  grid-template-columns: repeat(8, 12.5%);
+  grid-template-rows: repeat(8, 12.5%);
+}
+
+.tile {
+
+}
+
+.white-tile {
+  background-color: #F0D9B5;
+}
