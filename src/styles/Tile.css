@@ -1,0 +1,14 @@
+
+.tile {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tile img {
+  width: 100%;
+}
+
+.white-tile {
+  background-color: #F0D9B5;
+}
