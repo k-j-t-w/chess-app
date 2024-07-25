@@ -1,10 +1,9 @@
-import React, { useRef, useState, useEffect } from "react";
-import '../styles/Chessboard.css';
+import React, { MouseEvent, useEffect, useRef, useState } from "react";
 import Tile from "./Tile";
+import "../styles/Chessboard.css";
 
-const horizontalAxis = [8, 7, 6, 5, 4, 3, 2, 1];
-const verticalAxis = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
-
+const verticalAxis = ["1", "2", "3", "4", "5", "6", "7", "8"];
+const horizontalAxis = ["a", "b", "c", "d", "e", "f", "g", "h"];
 interface Piece {
   image: string;
   x: number;
@@ -36,81 +35,82 @@ for (let i = 0; i < 8; i++) {
 }
 
 const Chessboard = () => {
+  const [activePiece, setActivePiece] = useState<HTMLElement | null>(null);
+  const [gridX, setGridX] = useState(0);
+  const [gridY, setGridY] = useState(0);
   const [pieces, setPieces] = useState<Piece[]>(initialBoardState);
   const chessboardRef = useRef<HTMLDivElement>(null);
-  let activePiece: HTMLElement | null = null;
-
 
   function grabPiece(e: React.MouseEvent) {
     const element = e.target as HTMLElement;
-    if (element.classList.contains("chess-piece")) {
+    const chessboard = chessboardRef.current;
+    if (element.classList.contains("chess-piece") && chessboard) {
+      setGridX(Math.floor((e.clientX - chessboard.offsetLeft) / 100));
+      setGridY(Math.floor((e.clientY - chessboard.offsetTop) / 100));
+
       const x = e.clientX - 50;
       const y = e.clientY - 50;
-      element.style.position = 'absolute';
+      element.style.position = "absolute";
       element.style.left = `${x}px`;
       element.style.top = `${y}px`;
 
-      activePiece = element;
-
-      // Add event listeners to document
-      document.addEventListener("mousemove", handleMouseMove);
-      document.addEventListener("mouseup", dropPiece);
+      setActivePiece(element);
     }
   }
 
-  function handleMouseMove(e: MouseEvent) {
-    movePiece(e);
-  }
-
-  function movePiece(e: MouseEvent) {
+  function movePiece(e: React.MouseEvent) {
     const chessboard = chessboardRef.current;
     if (activePiece && chessboard) {
       const minX = chessboard.offsetLeft - 25;
-      const minY = chessboard.offsetTop - 20;
+      const minY = chessboard.offsetTop - 25;
       const maxX = chessboard.offsetLeft + chessboard.clientWidth - 75;
-      const maxY = chessboard.offsetTop + chessboard.clientHeight - 85;
+      const maxY = chessboard.offsetTop + chessboard.clientHeight - 75;
       const x = e.clientX - 50;
       const y = e.clientY - 50;
-
-      activePiece.style.position = 'absolute';
-
-      // Update x position with boundary checks
+      activePiece.style.position = "absolute";
+      //If x is smaller than minimum amount
       if (x < minX) {
         activePiece.style.left = `${minX}px`;
-      } else if (x > maxX) {
+      }
+      //If x is bigger than maximum amount
+      else if (x > maxX) {
         activePiece.style.left = `${maxX}px`;
-      } else {
+      }
+      //If x is in the constraints
+      else {
         activePiece.style.left = `${x}px`;
       }
-
-      // Update y position independently
+      //If y is smaller than minimum amount
       if (y < minY) {
         activePiece.style.top = `${minY}px`;
-      } else if (y > maxY) {
+      }
+      //If y is bigger than maximum amount
+      else if (y > maxY) {
         activePiece.style.top = `${maxY}px`;
-      } else {
+      }
+      //If y is in the constraints
+      else {
         activePiece.style.top = `${y}px`;
       }
     }
   }
-
-  function dropPiece(e: MouseEvent) {
-    if (activePiece) {
-      setPieces(value => {
-        const pieces = value.map(p => {
-          if (p.x === 0 && p.y === 0) {
-            p.x = 5;
-            p.y = 5;
+  function dropPiece(e: React.MouseEvent) {
+    const chessboard = chessboardRef.current;
+    if (activePiece && chessboard) {
+      const x = Math.floor((e.clientX - chessboard.offsetLeft) / 100);
+      const y = Math.floor((e.clientY - chessboard.offsetTop) / 100);
+      setPieces((value) => {
+        const pieces = value.map((p) => {
+          if (p.x === gridX && p.y === gridY) {
+            p.x = x;
+            p.y = y;
           }
           return p;
-        })
+        });
         return pieces;
-      })
-      activePiece = null;
+      });
 
-      // Remove event listeners from document
-      document.removeEventListener("mousemove", handleMouseMove);
-      document.removeEventListener("mouseup", dropPiece);
+      setActivePiece(null);
     }
   }
 
@@ -121,7 +121,7 @@ const Chessboard = () => {
       const number = j + i + 2;
       let image = '';
 
-      pieces.forEach(p => {
+      pieces.forEach((p) => {
         if (p.x === j && p.y === i) {
           image = p.image;
         }
@@ -133,13 +133,15 @@ const Chessboard = () => {
 
   return (
     <div
-      id='chessboard'
+      onMouseMove={(e) => movePiece(e)}
       onMouseDown={(e) => grabPiece(e)}
+      onMouseUp={(e) => dropPiece(e)}
+      id="chessboard"
       ref={chessboardRef}
     >
       {board}
     </div>
   );
-};
+}
 
 export default Chessboard;
