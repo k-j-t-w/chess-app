@@ -123,6 +123,7 @@ const Chessboard = () => {
       const currentPiece = pieces.find(p => p.x === gridX && p.y === gridY);
       const attackedPiece = pieces.find(p => p.x === x && p.y === y);
 
+
       if (currentPiece){
         const validMove = referee.isValidMove(gridX, gridY, x, y, currentPiece.type, currentPiece.team, pieces)
 
@@ -134,7 +135,7 @@ const Chessboard = () => {
           // IF PIECE IS ATTACKED, REMOVE IT
 
           const updatedPieces = pieces.reduce((results, piece) => {
-            if (piece.x === currentPiece.x && piece.y === currentPiece.y){
+            if (piece.x === gridX && piece.y === gridY){
               piece.x = x;
               piece.y = y;
               results.push(piece)
@@ -144,25 +145,8 @@ const Chessboard = () => {
 
             return results;
           }, [] as Piece[]);
-
           setPieces(updatedPieces);
 
-
-          // setPieces((value) => {
-          //   const pieces = value.reduce((results, piece) => {
-          //     if (piece.x === currentPiece.x && piece.y === currentPiece.y){
-          //       piece.x = x;
-          //       piece.y = y;
-          //       results.push(piece)
-          //     } else if (!(piece.x === x && piece.y === y)) {
-          //       results.push(piece)
-          //     }
-
-          //     return results;
-          //   }, [] as Piece[]);
-
-          //   return pieces;
-          // });
         } else {
           // RESETS THE PIECE POSITION
           activePiece.style.position = 'relative';
