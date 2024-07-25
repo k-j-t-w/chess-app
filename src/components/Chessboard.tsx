@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import '../styles/Chessboard.css';
 import Tile from "./Tile";
 
@@ -11,33 +11,35 @@ interface Piece {
   y: number;
 }
 
-const pieces: Piece[] = [];
+const initialBoardState: Piece[] = [];
 
 for (let p = 0; p < 2; p++) {
   const colour = p === 0 ? 'black' : 'white';
   const y = p === 0 ? 0 : 7;
-
-  pieces.push({ image: `images/${colour}-rook.png`, x: 0, y });
-  pieces.push({ image: `images/${colour}-rook.png`, x: 7, y });
-  pieces.push({ image: `images/${colour}-knight.png`, x: 1, y });
-  pieces.push({ image: `images/${colour}-knight.png`, x: 6, y });
-  pieces.push({ image: `images/${colour}-bishop.png`, x: 2, y });
-  pieces.push({ image: `images/${colour}-bishop.png`, x: 5, y });
-  pieces.push({ image: `images/${colour}-king.png`, x: 4, y });
-  pieces.push({ image: `images/${colour}-queen.png`, x: 3, y });
+        
+  initialBoardState.push({ image: `images/${colour}-rook.png`, x: 0, y });
+  initialBoardState.push({ image: `images/${colour}-rook.png`, x: 7, y });
+  initialBoardState.push({ image: `images/${colour}-knight.png`, x: 1, y });
+  initialBoardState.push({ image: `images/${colour}-knight.png`, x: 6, y });
+  initialBoardState.push({ image: `images/${colour}-bishop.png`, x: 2, y });
+  initialBoardState.push({ image: `images/${colour}-bishop.png`, x: 5, y });
+  initialBoardState.push({ image: `images/${colour}-king.png`, x: 4, y });
+  initialBoardState.push({ image: `images/${colour}-queen.png`, x: 3, y });
 }
 
 for (let i = 0; i < 8; i++) {
-  pieces.push({ image: 'images/black-pawn.png', x: i, y: 1 });
+  initialBoardState.push({ image: 'images/black-pawn.png', x: i, y: 1 });
 }
 
 for (let i = 0; i < 8; i++) {
-  pieces.push({ image: 'images/white-pawn.png', x: i, y: 6 });
+  initialBoardState.push({ image: 'images/white-pawn.png', x: i, y: 6 });
 }
 
 const Chessboard = () => {
+  const [pieces, setPieces] = useState<Piece[]>(initialBoardState);
   const chessboardRef = useRef<HTMLDivElement>(null);
   let activePiece: HTMLElement | null = null;
+
 
   function grabPiece(e: React.MouseEvent) {
     const element = e.target as HTMLElement;
@@ -92,8 +94,18 @@ const Chessboard = () => {
     }
   }
 
-  function dropPiece() {
+  function dropPiece(e: MouseEvent) {
     if (activePiece) {
+      setPieces(value => {
+        const pieces = value.map(p => {
+          if (p.x === 0 && p.y === 0) {
+            p.x = 5;
+            p.y = 5;
+          }
+          return p;
+        })
+        return pieces;
+      })
       activePiece = null;
 
       // Remove event listeners from document
