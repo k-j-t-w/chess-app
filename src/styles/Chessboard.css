@@ -1,9 +1,9 @@
 #chessboard {
-  width: 90vh;
-  height: 90vh;
-  max-height: 90vw;
-  max-width:90vw;
-  background-color: #B58863;
+  width: 800px;
+  height: 800px;
+  /* max-height: 90vw;
+  max-width:90vw; */
+  background-color: #71b563;
   display: grid;
   grid-template-columns: repeat(8, 12.5%);
   grid-template-rows: repeat(8, 12.5%);

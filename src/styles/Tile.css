@@ -5,10 +5,26 @@
   justify-content: center;
 }
 
-.tile img {
-  width: 100%;
+.chess-piece {
+  width: 100px;
+  height:100px;
+  background-size: 100px;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.chess-piece:hover {
+  cursor: grab;
+}
+
+.chess-piece:active {
+  cursor: grabbing;  
 }
 
 .white-tile {
   background-color: #F0D9B5;
+}
+
+.black-tile {
+  background-color: #B58863;
 }
