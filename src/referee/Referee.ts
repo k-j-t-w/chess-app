@@ -66,21 +66,25 @@ export default class Referee {
           return true;
         }
         // ATTACK LOGIC
-      } else if (desiredPosition.x - initialPosition.x === -1 && initialPosition.y - desiredPosition.y === pawnDirection) {
-        // LEFT ATTACK
+      } else if (Math.abs(desiredPosition.x - initialPosition.x) === 1 && initialPosition.y - desiredPosition.y === pawnDirection) {
 
         if(this.tileIsOccupiedByOppenent(desiredPosition.x, desiredPosition.y, boardState, team)) {
           return true;
         }
-      }  else if (desiredPosition.x - initialPosition.x === 1 && initialPosition.y - desiredPosition.y === pawnDirection) {
-        // RIGHT ATTACK
+      } 
 
-        if(this.tileIsOccupiedByOppenent(desiredPosition.x, desiredPosition.y, boardState, team)) {
+      // KNIGHT LOGIC
+    } else if (type === PieceType.KNIGHT) {
+      if ((Math.abs(initialPosition.x - desiredPosition.x) === 1 && Math.abs(initialPosition.y - desiredPosition.y) === 2 ) || 
+          (Math.abs(initialPosition.x - desiredPosition.x) === 2 && Math.abs(initialPosition.y - desiredPosition.y) === 1)) {
+        if(!this.tileIsOccupied(desiredPosition.x, desiredPosition.y, boardState)) {
+          return true;
+        } else if (this.tileIsOccupiedByOppenent(desiredPosition.x, desiredPosition.y, boardState, team)) {
           return true;
         }
-      }
-
+      } 
     }
+
     return false;
   }
 }
