@@ -21,6 +21,29 @@ export default class Referee {
     }
   }
 
+  isEnPassantMove(
+    px: number, 
+    py: number, 
+    x: number, 
+    y: number, 
+    type: PieceType, 
+    team: TeamType,
+    boardState: Piece[]
+  ) {
+    const pawnDirection = (team === TeamType.WHITE) ? 1 : -1;
+
+    if(type === PieceType.PAWN) {
+      if ((x - px === -1 || x - px === 1) && py - y === pawnDirection) {
+        const piece = boardState.find(p => p.x === x && p.y === y + pawnDirection && p.enPassant);
+        if(piece) {
+          return true;
+        }
+      }  
+    }
+
+    return false;
+  }
+
 
   isValidMove(
     px: number, 
@@ -31,16 +54,12 @@ export default class Referee {
     team: TeamType,
     boardState: Piece[]
   ) {
-    // console.log('Referee is checking the move...')
-    // console.log('Previous Location: ', px, py)
-    // console.log('Current Location: ', x, y)
-    // console.log('PieceType: ', type)
-    // console.log('TeamType: ', team)
 
+    // PAWN LOGIC
     // MOVEMENT LOGIC
     if (type === PieceType.PAWN) {
       const specialRow = (team === TeamType.WHITE) ? 6 : 1;
-      const pawnDirection =(team === TeamType.WHITE) ? 1 : -1
+      const pawnDirection = (team === TeamType.WHITE) ? 1 : -1
 
       if(px === x &&py === specialRow && py - y === 2*pawnDirection) {
         if (!this.tileIsOccupied(x, y, boardState) && !this.tileIsOccupied(x, y+pawnDirection, boardState)) {
@@ -53,13 +72,13 @@ export default class Referee {
         // ATTACK LOGIC
       } else if (x - px === -1 && py - y === pawnDirection) {
         // LEFT ATTACK
-        console.log('left attack')
+
         if(this.tileIsOccupiedByOppenent(x, y, boardState, team)) {
           return true;
         }
       }  else if (x - px === 1 && py - y === pawnDirection) {
         // RIGHT ATTACK
-        console.log('right attack')
+
         if(this.tileIsOccupiedByOppenent(x, y, boardState, team)) {
           return true;
         }
