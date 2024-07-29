@@ -3,61 +3,14 @@ import { tileIsEmptyOrOccupiedByOpponent, tileIsOccupied } from "./GeneralRules"
 
 export const bishopMove = (initialPosition: Position, desiredPosition: Position, team: TeamType, boardState: Piece[]): boolean => {
   for(let i = 1; i < 8; i++) {
-    //Up right movement
-    if(desiredPosition.x > initialPosition.x && desiredPosition.y > initialPosition.y) {
-      const passedPosition: Position = {x: initialPosition.x + i, y: initialPosition.y + i};
-      //Check if the tile is the destination tile
-      if(samePosition(passedPosition, desiredPosition)) {
-        //Dealing with destination tile
-        if(tileIsEmptyOrOccupiedByOpponent(passedPosition, boardState, team)) {
-          return true;
-        }
-      } else {
-        //Dealing with passing tile
-        if(tileIsOccupied(passedPosition, boardState)) {
-          break;
-        }
-      }
-    }
-      
-    //Bottom right movement
-    if(desiredPosition.x > initialPosition.x && desiredPosition.y < initialPosition.y) {
-      const passedPosition: Position = {x: initialPosition.x + i, y: initialPosition.y - i};
-      //Check if the tile is the destination tile
-      if(samePosition(passedPosition, desiredPosition)) {
-        //Dealing with destination tile
-        if(tileIsEmptyOrOccupiedByOpponent(passedPosition, boardState, team)) {
-          return true;
-        }
-      } else {
-        if(tileIsOccupied(passedPosition, boardState)) {
-          break;
-        }
-      }
-    }
+    
+    if (Math.abs(desiredPosition.x - initialPosition.x) === Math.abs(desiredPosition.y - initialPosition.y)) {
+      const multiplierX = (desiredPosition.x < initialPosition.x) ? -1 : (desiredPosition.x > initialPosition.x) ? 1 : 0;
+      const multiplierY = (desiredPosition.y < initialPosition.y) ? -1 : (desiredPosition.y > initialPosition.y) ? 1 : 0;
 
-    //Bottom left movement
-    if(desiredPosition.x < initialPosition.x && desiredPosition.y < initialPosition.y) {
-      const passedPosition: Position = {x: initialPosition.x - i, y: initialPosition.y - i};
-      //Check if the tile is the destination tile
-      if(samePosition(passedPosition, desiredPosition)) {
-        //Dealing with destination tile
-        if(tileIsEmptyOrOccupiedByOpponent(passedPosition, boardState, team)) {
-          return true;
-        }
-      } else {
-        if(tileIsOccupied(passedPosition, boardState)) {
-          break;
-        }
-      }
-    }
+      const passedPosition: Position = {x: initialPosition.x + (i * multiplierX), y: initialPosition.y + (i * multiplierY)};
 
-    //Top left movement
-    if(desiredPosition.x < initialPosition.x && desiredPosition.y > initialPosition.y) {
-      const passedPosition: Position = {x: initialPosition.x - i, y: initialPosition.y+i};
-      //Check if the tile is the destination tile
       if(samePosition(passedPosition, desiredPosition)) {
-        //Dealing with destination tile
         if(tileIsEmptyOrOccupiedByOpponent(passedPosition, boardState, team)) {
           return true;
         }
