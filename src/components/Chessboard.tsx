@@ -13,10 +13,12 @@ import {
 } from "../Constants";
 
 const Chessboard = () => {
+  const [promotionPawn, setPromotionPawn] = useState<Piece>();
   const [activePiece, setActivePiece] = useState<HTMLElement | null>(null);
   const [grabPosition, setGrabPosition] = useState<Position>({x: -1, y: -1})
   const [pieces, setPieces] = useState<Piece[]>(initialBoardState);
   const chessboardRef = useRef<HTMLDivElement>(null);
+  const modalRef = useRef<HTMLDivElement>(null);
   const referee = new Referee;
 
   function grabPiece(e: React.MouseEvent) {
@@ -110,6 +112,14 @@ const Chessboard = () => {
 
               piece.position.x = x;
               piece.position.y = y;
+
+              const promotionRow = (piece.team === TeamType.WHITE) ? 0 : 7;
+
+              if (y === promotionRow && piece.type === PieceType.PAWN) {
+                // PAWN PROMOTION
+                modalRef.current?.classList.remove("hidden");
+                setPromotionPawn(piece);
+              }
               results.push(piece)
             } else if (!(samePosition(piece.position, {x, y}))) {
               if(piece.type === PieceType.PAWN) {
@@ -134,6 +144,49 @@ const Chessboard = () => {
     }
   }
 
+  function promotePawn(pieceType: PieceType) {
+    if (promotionPawn === undefined) {
+      return;
+    }
+
+    const updatedPieces = pieces.reduce((results, piece) => {
+      if(samePosition(piece.position, promotionPawn.position)) {
+        piece.type = pieceType
+        const teamType = (piece.team === TeamType.WHITE) ? 'white' : 'black';
+        let image = '';
+        switch(pieceType) {
+          case PieceType.ROOK: {
+            image = 'rook';
+            break;
+          }
+          case PieceType.BISHOP: {
+            image = 'bishop';
+            break;
+          }
+          case PieceType.KNIGHT: {
+            image = 'knight';
+            break;
+          }
+          case PieceType.QUEEN: {
+            image = 'queen';
+            break;
+          }
+        }
+        piece.image = `/images/${teamType}-${image}.png`
+      }
+      results.push(piece);
+      return results;
+    }, [] as Piece[])
+
+    setPieces(updatedPieces);
+
+    modalRef.current?.classList.add('hidden');
+  }
+
+  function promotionTeamType() {
+    return (promotionPawn?.team === TeamType.WHITE) ? 'white' : 'black';
+  }
+
   const board: JSX.Element[] = [];
 
   for (let i = 0; i < HORIXONTAL_AXIS.length; i++) {
@@ -147,15 +200,25 @@ const Chessboard = () => {
   }
 
   return (
-    <div
-      onMouseMove={(e) => movePiece(e)}
-      onMouseDown={(e) => grabPiece(e)}
-      onMouseUp={(e) => dropPiece(e)}
-      id="chessboard"
-      ref={chessboardRef}
-    >
-      {board}
+    <>
+    <div id='pawn-promotion-modal' className="hidden" ref={modalRef}>
+      <div className="modal-body">
+        <img onClick={() => promotePawn(PieceType.QUEEN)} src={`/images/${promotionTeamType()}-queen.png`}/>
+        <img onClick={() => promotePawn(PieceType.KNIGHT)} src={`/images/${promotionTeamType()}-knight.png`}/>
+        <img onClick={() => promotePawn(PieceType.ROOK)} src={`/images/${promotionTeamType()}-rook.png`}/>
+        <img onClick={() => promotePawn(PieceType.BISHOP)} src={`/images/${promotionTeamType()}-bishop.png`}/>
+      </div>
     </div>
+      <div
+        onMouseMove={(e) => movePiece(e)}
+        onMouseDown={(e) => grabPiece(e)}
+        onMouseUp={(e) => dropPiece(e)}
+        id="chessboard"
+        ref={chessboardRef}
+      >
+        {board}
+      </div>
+    </>
   );
 }
 
