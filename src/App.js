@@ -1,12 +1,12 @@
 import logo from './logo.svg';
 import './App.css';
-import Chessboard from './components/Chessboard.tsx';
+import Arbiter from './components/Arbiter.tsx';
 
 
 function App() {
   return (
     <div className='app'>
-      <Chessboard/>
+      <Arbiter/>
     </div>
   );
 }
