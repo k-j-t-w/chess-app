@@ -10,3 +10,24 @@ export const knightMove = (initialPosition: Position, desiredPosition: Position,
   } 
   return false;
 }
+
+export const getPossibleKnightMoves = (knight: Piece, boardState: Piece[]): Position[] => {
+  const possibleMoves: Position[] = [];
+
+  for (let i = -1; i < 2; i += 2) {
+    for (let j = -1; j < 2; j += 2) {
+      const verticalMove: Position = {x: knight.position.x + j, y: knight.position.y + i *2};
+      const horixontalMove: Position = {x: knight.position.x + i * 2, y: knight.position.y + j };
+
+      if (tileIsEmptyOrOccupiedByOpponent(verticalMove, boardState, knight.team)) {
+        possibleMoves.push(verticalMove);
+      }
+
+      if (tileIsEmptyOrOccupiedByOpponent(horixontalMove, boardState, knight.team)) {
+        possibleMoves.push(horixontalMove);
+      }
+    }
+  }
+
+  return possibleMoves;
+}
