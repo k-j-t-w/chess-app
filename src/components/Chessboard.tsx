@@ -21,7 +21,17 @@ const Chessboard = () => {
   const modalRef = useRef<HTMLDivElement>(null);
   const referee = new Referee;
 
+  function updateValidMoves() {
+    setPieces((currentPieces) => {
+      return currentPieces.map(p => {
+        p.possibleMoves = referee.getValidMoves(p, currentPieces);
+        return p;
+      });
+    });
+  }
+
   function grabPiece(e: React.MouseEvent) {
+    updateValidMoves();
     const element = e.target as HTMLElement;
     const chessboard = chessboardRef.current;
     if (element.classList.contains("chess-piece") && chessboard) {
@@ -195,7 +205,10 @@ const Chessboard = () => {
       const piece = pieces.find(p => samePosition(p.position, {x: j, y: i}))
       const image = piece ? piece.image : undefined;
 
-      board.push(<Tile key={`${i}${j}`} image={image} number={number} />);
+      const currentPiece = activePiece !== null ? pieces.find(p => samePosition(p.position, grabPosition)) : undefined;
+      const highlight = currentPiece?.possibleMoves ? currentPiece.possibleMoves.some(p => samePosition(p, {x: j, y: i})) : false;
+
+      board.push(<Tile key={`${i}${j}`} image={image} number={number} highlight={highlight} />);
     }
   }
 

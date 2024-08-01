@@ -28,3 +28,11 @@
 .black-tile {
   background-color: #4B739A;
 }
+
+.tile-highlight::before {
+  content: ' ';
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: rgba(0, 0, 0, 0.25);
+}
