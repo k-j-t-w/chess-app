@@ -45,7 +45,7 @@ function Arbiter() {
           piece.position.x = destination.x;
           piece.position.y = destination.y;
           results.push(piece)
-        } else if (!(samePosition(piece.position, { x: destination.x, y: destination.y+pawnDirection }))) {
+        } else if (!samePosition(piece.position, { x: destination.x, y: destination.y+pawnDirection })) {
           if(piece.type === PieceType.PAWN) {
             piece.enPassant = false;
           }
@@ -77,19 +77,31 @@ function Arbiter() {
             modalRef.current?.classList.remove("hidden");
             setPromotionPawn(piece);
           }
-          results.push(piece)
+          results.push(piece);
+
         } else if (!(samePosition(piece.position, { x: destination.x, y: destination.y}))) {
+          // console.log('piece.position: ', piece.position);
+          // console.log('destination.x, destination.y,: ', destination.x, destination.y);
+          // console.log('piece.team: ', piece.team);
+          // console.log('piece.type: ', piece.type);
+
           if(piece.type === PieceType.PAWN) {
             piece.enPassant = false;
           }
           results.push(piece)
+        } else {
+          console.log('this piece was not pushed and thus removed: ', piece)
         }
 
         return results;
       }, [] as Piece[]);
 
+      console.log('updatedPieces: ', updatedPieces);
+      console.log('updatePossibleMoves and setPieces');
+      console.log('Pieces');
       updatePossibleMoves();
       setPieces(updatedPieces);
+      console.log(pieces);
     } else {
       return false;
     }
