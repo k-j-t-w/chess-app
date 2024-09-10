@@ -30,6 +30,22 @@ const Chessboard = () => {
     });
   }
 
+  function calculateAllMoves() {
+    for (const piece of pieces) {
+      piece.possibleMoves = referee.getValidMoves(piece, pieces)
+    }
+
+    const king = pieces.find(p => p.type === PieceType.KING && p.team === TeamType.BLACK)
+
+    if(king?.possibleMoves === undefined) return;
+
+    const originalKingPosition = king.position;
+    for(const move of king.possibleMoves) {
+      king.position = move;
+    }
+    king.position = originalKingPosition;
+  }
+
   function grabPiece(e: React.MouseEvent) {
     updateValidMoves();
     const element = e.target as HTMLElement;
