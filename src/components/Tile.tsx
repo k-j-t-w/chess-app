@@ -12,12 +12,11 @@ const Tile = ({ number, image, highlight }: Props) => {
     'tile', 
     number % 2 !== 0 && 'black-tile', 
     number % 2 === 0 && 'white-tile', 
-    highlight && 'tile-highlight',
-    image && 'chess-piece-tile'
+    highlight && 'tile-highlight'
   ].filter(Boolean).join(' ');
 
     return <div className={className}>
-      {image && <div style={{backgroundImage: `url(${image})`}} className='chess-piece'></div>}
+      {image && <div className='chess-piece' style={{backgroundImage: `url(${image})`}}></div>}
     </div>
 
 };

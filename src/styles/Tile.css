@@ -19,7 +19,6 @@
 
 .chess-piece:active {
   cursor: grabbing;  
-  z-index: 100;
 }
 
 .white-tile {
@@ -30,27 +29,10 @@
   background-color: #4B739A;
 }
 
-.tile-highlight:not(.chess-piece-tile)::before {
+.tile-highlight::before {
   content: ' ';
   width: 30px;
   height: 30px;
   border-radius: 50%;
   background-color: rgba(0, 0, 0, 0.25);
-}
-
-.tile-highlight.chess-piece-tile{
-  content: ' ';
-  width: 100px;
-  height: 100px;
-  position:relative;
-  overflow:hidden;
-}
-
-.tile-highlight.chess-piece-tile::before {
-  content:" ";
-  position:absolute;
-  width:110%;
-  height:110%;
-  border-radius:50%;
-  box-shadow:0 0px 0 100px rgba(0, 0, 0, 0.25);
 }
