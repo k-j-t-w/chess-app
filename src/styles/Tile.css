@@ -5,7 +5,7 @@
   justify-content: center;
 }
 
-.chess-piece {
+.chess-piece{
   width: 100px;
   height:100px;
   background-size: 100px;
@@ -13,12 +13,13 @@
   background-position: center;
 }
 
-.chess-piece:hover {
+.chess-piece:hover{
   cursor: grab;
 }
 
-.chess-piece:active {
+.chess-piece:active{
   cursor: grabbing;  
+  z-index: 100;
 }
 
 .white-tile {
@@ -29,11 +30,28 @@
   background-color: #4B739A;
 }
 
-.tile-highlight::before {
+.tile-highlight:not(.chess-piece-tile)::before {
   content: ' ';
   width: 30px;
   height: 30px;
   border-radius: 50%;
   background-color: rgba(0, 0, 0, 0.25);
+}
+
+.tile-highlight.chess-piece-tile {
+  width: 100px;
+  height: 100px;
+  position: relative;
+  overflow: hidden;
+}
+
+
+.tile-highlight.chess-piece-tile::before {
+  content: '';
+  position: absolute;
+  width: 110%;
+  height: 110%;
+  border-radius: 100%;
+  box-shadow: 0px 300px 0px 300px #0000003f;
 }
 
